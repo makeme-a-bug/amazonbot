@@ -6,7 +6,7 @@ from rich.console import Console
 
 class ReporterManager:
     
-    def __init__(self,file:str="inputs/report_abuse_input.csv" , port:int = 35000):
+    def __init__(self,file:str="inputs/report_abuse_input.csv" , port:int = 35111):
         
         self.file = file
         self.port = port
