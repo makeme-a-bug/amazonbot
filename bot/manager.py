@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 from .reporter import Reporter
 from rich.console import Console
+import time
 
 class ReporterManager:
     
@@ -109,6 +110,7 @@ class ReporterManager:
                 with Reporter(profile_name , profile_uuid , urls , mla_url,tracker = profiles) as R:
                     R.gather_reviews()
 
+                time.sleep(4)
                 self.console.log(f"{profile_name} reporting complete",style='green')
             tracker = pd.DataFrame(profiles)
             tracker.to_csv('report.csv')

@@ -152,13 +152,19 @@ class Reporter(webdriver.Remote):
         returns:\n
         None
         """
-        self.get(url)
-        try:
-            _ = WebDriverWait(self, 120).until(EC.element_to_be_clickable((By.ID,"nav-logo")))
-            return True
-        except TimeoutException as e:
-            self.console.log("Page took too long load.",style="red")
-            return False
+        found = False
+        attempt = 0
+        while not found and attempt < 2:
+            self.get(url)
+            try:
+                _ = WebDriverWait(self, 120).until(EC.element_to_be_clickable((By.ID,"nav-logo")))
+                found = True
+                return True
+            except TimeoutException as e:
+                self.console.log("Page took too long load.",style="red")
+                self.console.log("Trying again" , style="blue")
+                attempt += 1
+        return False
 
 
 
