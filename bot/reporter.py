@@ -152,19 +152,18 @@ class Reporter(webdriver.Remote):
         returns:\n
         None
         """
-        found = False
-        attempt = 0
-        while not found and attempt < 2:
+        attempts = 0
+        url_open = False
+        while not url_open:
             self.get(url)
-            try:
-                _ = WebDriverWait(self, 120).until(EC.element_to_be_clickable((By.ID,"nav-logo")))
-                found = True
-                return True
-            except TimeoutException as e:
-                self.console.log("Page took too long load.",style="red")
-                self.console.log("Trying again" , style="blue")
-                attempt += 1
-        return False
+            if self.find_elements(By.ID,"nav-logo") or "Try different image" in self.page_source:
+                url_open = True
+                print("page loaded")
+            if attempts >= 3:
+                print("page not loaded")
+                break
+            attempts +=1
+        return url_open
 
 
 
@@ -218,7 +217,7 @@ class Reporter(webdriver.Remote):
                     report_window = window
 
             if report_window:
-                self.switch_to_window(report_window)
+                self.switch_to.window(report_window)
                 #sometime captcha appears
                 captcha = self.solve_captcha()
                 if captcha:
@@ -229,7 +228,7 @@ class Reporter(webdriver.Remote):
                         self.console.log(f"[{self.profile_name}] [Report abuse ] button clicked" , style="blue")
                         time.sleep(3)
                         self.close()
-                        self.switch_to_window(main_window)
+                        self.switch_to.window(main_window)
                         return True
 
                     self.console.log("report button not found",style="red")
